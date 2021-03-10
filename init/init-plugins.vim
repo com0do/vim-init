@@ -91,8 +91,8 @@ augroup END
 "----------------------------------------------------------------------
 if index(g:bundle_group, 'basic') >= 0
 
-	" 展示开始画面，显示最近编辑过的文件
-	Plug 'mhinz/vim-startify'
+	" 展示开始画面，显示最近编辑过的文件 
+    Plug 'mhinz/vim-startify'
 
 	" 一次性安装一大堆 colorscheme
 	Plug 'flazz/vim-colorschemes'
@@ -102,6 +102,8 @@ if index(g:bundle_group, 'basic') >= 0
 
 	" 用于在侧边符号栏显示 marks （ma-mz 记录的位置）
 	Plug 'kshenoy/vim-signature'
+    Plug 'inkarkat/vim-ingo-library'
+    Plug 'inkarkat/vim-mark'
 
 	" 用于在侧边符号栏显示 git/svn 的 diff
 	Plug 'mhinz/vim-signify'
@@ -115,15 +117,16 @@ if index(g:bundle_group, 'basic') >= 0
 
 	" 提供基于 TAGS 的定义预览，函数参数预览，quickfix 预览
 	Plug 'skywind3000/vim-preview'
+    "Plug 'skywind3000/vim-quickui'
 
-	" Git 支持
+    " Git 支持
 	Plug 'tpope/vim-fugitive'
 
 	" 使用 ALT+E 来选择窗口
 	nmap <m-e> <Plug>(choosewin)
 
 	" 默认不显示 startify
-	let g:startify_disable_at_vimenter = 1
+	let g:startify_disable_at_vimenter = 0
 	let g:startify_session_dir = '~/.vim/session'
 
 	" 使用 <space>ha 清除 errormarker 标注的错误
@@ -439,7 +442,8 @@ if index(g:bundle_group, 'leaderf') >= 0
 		noremap <m-n> :LeaderfBuffer<cr>
 
 		" ALT+m 全局 tags 模糊匹配
-		noremap <m-m> :LeaderfTag<cr>
+		noremap <m-M> :LeaderfTag<cr>
+        noremap <m-m> :<C-U><C-R>=printf("Leaderf! rg -e %s -g !*.json",expand("<cword>"))<cr><cr>
 
 		" 最大历史文件保存 2048 个
 		let g:Lf_MruMaxFiles = 2048
@@ -529,6 +533,7 @@ call plug#end()
 " YouCompleteMe 默认设置：YCM 需要你另外手动编译安装
 "----------------------------------------------------------------------
 
+let g:ycm_confirm_extra_conf = 0
 " 禁用预览功能：扰乱视听
 let g:ycm_add_preview_to_completeopt = 0
 

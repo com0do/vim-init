@@ -193,14 +193,14 @@ inoremap <m-y> <c-\><c-o>d$
 " 传统的 CTRL+hjkl 移动窗口不适用于 vim 8.1 的终端模式，CTRL+hjkl 在
 " bash/zsh 及带文本界面的程序中都是重要键位需要保留，不能 tnoremap 的
 "----------------------------------------------------------------------
-noremap <m-H> <c-w>h
-noremap <m-L> <c-w>l
-noremap <m-J> <c-w>j
-noremap <m-K> <c-w>k
-inoremap <m-H> <esc><c-w>h
-inoremap <m-L> <esc><c-w>l
-inoremap <m-J> <esc><c-w>j
-inoremap <m-K> <esc><c-w>k
+noremap <m-h> <c-w>h
+noremap <m-l> <c-w>l
+noremap <m-j> <c-w>j
+noremap <m-k> <c-w>k
+inoremap <m-h> <esc><c-w>h
+inoremap <m-l> <esc><c-w>l
+inoremap <m-j> <esc><c-w>j
+inoremap <m-k> <esc><c-w>k
 
 if has('terminal') && exists(':terminal') == 2 && has('patch-8.1.1')
 	" vim 8.1 支持 termwinkey ，不需要把 terminal 切换成 normal 模式
@@ -331,3 +331,214 @@ else
 endif
 
 
+"----------------------------------------------------------------------
+" window control
+"----------------------------------------------------------------------
+noremap <silent><space>= :resize +3<cr>
+noremap <silent><space>- :resize -3<cr>
+noremap <silent><space>, :vertical resize -3<cr>
+noremap <silent><space>. :vertical resize +3<cr>
+
+noremap <silent><space>hh :nohl<cr>
+noremap <silent><bs> :nohl<cr>:redraw!<cr>
+noremap <silent><tab>, :call Tab_MoveLeft()<cr>
+noremap <silent><tab>. :call Tab_MoveRight()<cr>
+" noremap <silent><tab>6 :VinegarOpen leftabove vs<cr>
+" noremap <silent><tab>7 :VinegarOpen vs<cr>
+" noremap <silent><tab>8 :VinegarOpen belowright sp<cr>
+" noremap <silent><tab>9 :VinegarOpen tabedit<cr>
+noremap <silent><tab>0 :exe "NERDTree ".fnameescape(expand("%:p:h"))<cr>
+noremap <silent><tab>y :exe "NERDTree ".fnameescape(asclib#path#get_root("%"))<cr>
+noremap <silent><tab>g <c-w>p
+
+noremap <silent><space>ha :GuiSignRemove
+			\ errormarker_error errormarker_warning<cr>
+
+" replace
+noremap <space>p viw"0p
+noremap <space>y yiw
+
+" fast save
+noremap <C-S> :w<cr>
+inoremap <C-S> <ESC>:w<cr>
+
+noremap <silent><m-t> :tabnew<cr>
+inoremap <silent><m-t> <ESC>:tabnew<cr>
+noremap <silent><m-w> :tabclose<cr>
+inoremap <silent><m-w> <ESC>:tabclose<cr>
+noremap <silent><m-v> :close<cr>
+inoremap <silent><m-v> <esc>:close<cr>
+noremap <m-s> :w<cr>
+inoremap <m-s> <esc>:w<cr>
+
+
+"----------------------------------------------------------------------
+" tasks
+"----------------------------------------------------------------------
+noremap <space>te :AsyncTaskEdit<cr>
+noremap <space>tg :AsyncTaskEdit!<cr>
+noremap <space>tfb :AsyncTask file-build<cr>
+noremap <space>tfr :AsyncTask file-run<cr>
+noremap <space>tfd :AsyncTask file-debug<cr>
+noremap <space>tpi :AsyncTask project-init<cr>
+noremap <space>tpb :AsyncTask project-build<cr>
+noremap <space>tpr :AsyncTask project-run<cr>
+noremap <space>tpd :AsyncTask project-debug<cr>
+
+
+nnoremap <m-z> za
+nnoremap <m-Z> zA
+
+
+
+"----------------------------------------------------------------------
+" space + s : svn
+"----------------------------------------------------------------------
+noremap <space>sc :AsyncRun svn co -m "update from vim"<cr>
+noremap <space>su :AsyncRun svn up<cr>
+noremap <space>st :AsyncRun svn st<cr>
+
+" editing commands
+noremap <space>aa ggVG
+
+"----------------------------------------------------------------------
+" text-objects
+"----------------------------------------------------------------------
+onoremap e :<c-u>normal! ggVG<cr>
+vnoremap e ogg0oG$
+onoremap il :<c-u>normal! v$o^oh<cr>
+vnoremap il $o^oh
+
+
+"----------------------------------------------------------------------
+" space + j : make
+"----------------------------------------------------------------------
+noremap <silent><space>jj  :AsyncRun -cwd=<root> make<cr>
+noremap <silent><space>jc  :AsyncRun -cwd=<root> make clean<cr>
+noremap <silent><space>jk  :AsyncRun -mode=4 -cwd=<root> make run<cr>
+noremap <silent><space>jl  :AsyncRun -mode=4 -cwd=<root> make test<cr>
+noremap <silent><space>j1  :AsyncRun -mode=4 -cwd=<root> make t1<cr>
+noremap <silent><space>j2  :AsyncRun -mode=4 -cwd=<root> make t2<cr>
+noremap <silent><space>j3  :AsyncRun -mode=4 -cwd=<root> make t3<cr>
+noremap <silent><space>j4  :AsyncRun -mode=4 -cwd=<root> make t4<cr>
+noremap <silent><space>j5  :AsyncRun -mode=4 -cwd=<root> make t5<cr>
+noremap <silent><space>k1  :AsyncRun -cwd=<root> make t1<cr>
+noremap <silent><space>k2  :AsyncRun -cwd=<root> make t2<cr>
+noremap <silent><space>k3  :AsyncRun -cwd=<root> make t3<cr>
+noremap <silent><space>k4  :AsyncRun -cwd=<root> make t4<cr>
+noremap <silent><space>k5  :AsyncRun -cwd=<root> make t5<cr>
+
+
+"----------------------------------------------------------------------
+" space + t : toggle plugins
+"----------------------------------------------------------------------
+noremap <silent><S-F10> :call quickmenu#toggle(0)<cr>
+inoremap <silent><S-F10> <ESC>:call quickmenu#toggle(0)<cr>
+noremap <silent><M-;> :PreviewTag<cr>
+noremap <silent><M-:> :PreviewClose<cr>
+noremap <silent><tab>; :PreviewGoto edit<cr>
+noremap <silent><tab>: :PreviewGoto tabe<cr>
+
+noremap  <silent><M-u> :PreviewScroll -1<cr> 
+noremap  <silent><M-d> :PreviewScroll +1<cr> 
+inoremap <silent><M-u>  <c-\> <co>:PreviewScroll -1<cr> 
+inoremap <silent><M-d>  <c-\> <co>:PreviewScroll +1<cr>
+
+if has('autocmd')
+	function! s:quickfix_keymap()
+		if &buftype != 'quickfix'
+			return
+		endif
+		nnoremap <silent><buffer> p :call quickui#tools#preview_quickfix()<cr>
+		nnoremap <silent><buffer> P :PreviewClose<cr>
+		nnoremap <silent><buffer> q :close<cr>
+		setlocal nonumber
+	endfunc
+	function! s:insert_leave()
+		if get(g:, 'echodoc#enable_at_startup') == 0
+			set showmode
+		endif
+	endfunc
+	augroup AscQuickfix
+		autocmd!
+		autocmd FileType qf call s:quickfix_keymap()
+		autocmd InsertLeave * call s:insert_leave()
+		" autocmd InsertLeave * set showmode
+	augroup END
+endif
+
+nnoremap <silent><m-a> :PreviewSignature<cr>
+inoremap <silent><m-a> <c-\><c-o>:PreviewSignature<cr>
+
+
+"----------------------------------------------------------------------
+" GUI/Terminal
+"----------------------------------------------------------------------
+noremap <silent><M-[> :call Tools_QuickfixCursor(2)<cr>
+noremap <silent><M-]> :call Tools_QuickfixCursor(3)<cr>
+noremap <silent><M-{> :call Tools_QuickfixCursor(4)<cr>
+noremap <silent><M-}> :call Tools_QuickfixCursor(5)<cr>
+"noremap <silent><M-u> :call Tools_PreviousCursor(6)<cr>
+"noremap <silent><M-d> :call Tools_PreviousCursor(7)<cr>
+
+inoremap <silent><M-[> <c-\><c-o>:call Tools_QuickfixCursor(2)<cr>
+inoremap <silent><M-]> <c-\><c-o>:call Tools_QuickfixCursor(3)<cr>
+inoremap <silent><M-{> <c-\><c-o>:call Tools_QuickfixCursor(4)<cr>
+inoremap <silent><M-}> <c-\><c-o>:call Tools_QuickfixCursor(5)<cr>
+"inoremap <silent><M-u> <c-\><c-o>:call Tools_PreviousCursor(6)<cr>
+"inoremap <silent><M-d> <c-\><c-o>:call Tools_PreviousCursor(7)<cr>
+
+
+"----------------------------------------------------------------------
+" space + f + num: session management
+"----------------------------------------------------------------------
+set ssop-=options    " do not store global and local values in a session
+" set ssop-=folds      " do not store folds
+
+for s:index in range(5)
+	exec 'noremap <silent><space>f'.s:index.'s :mksession! ~/.vim/session.'.s:index.'<cr>'
+	exec 'noremap <silent><space>f'.s:index.'l :so ~/.vim/session.'.s:index.'<cr>'
+endfor
+
+
+"----------------------------------------------------------------------
+" leader + b/c : buffer
+"----------------------------------------------------------------------
+noremap <silent><leader>bc :BufferClose<cr>
+noremap <silent><leader>cw :call Change_DirectoryToFile()<cr>
+
+
+"----------------------------------------------------------------------
+" space + h : fast open files
+"----------------------------------------------------------------------
+noremap <space>hp :FileSwitch tabe ~/.vim/project.txt<cr>
+noremap <space>hl :FileSwitch tabe ~/.vim/cloud/Documents/agenda.otl<cr>
+noremap <space>hf <c-w>gf
+noremap <space>he :call Show_Explore()<cr>
+noremap <space>hb :FileSwitch tabe ~/.vim/bundle.vim<cr>
+noremap <space>hq :FileSwitch tabe ~/.vim/quicknote.txt<cr>
+noremap <space>hg :FileSwitch tabe ~/.vim/scratch.txt<cr>
+noremap <space>hd :FileSwitch tabe ~/Dropbox/Documents/notes.txt<cr>
+noremap <space>ho :FileSwitch tabe ~/.vim/cloud/Documents/cloudnote.txt<cr>
+noremap <space>hi :FileSwitch tabe ~/.vim/tasks.ini<cr>
+noremap <space>h; :call asclib#nextcloud_sync()<cr>
+
+if (!has('nvim')) && (has('win32') || has('win64'))
+	noremap <space>hr :FileSwitch tabe ~/_vimrc<cr>
+elseif !has('nvim')
+	noremap <space>hr :FileSwitch tabe ~/.vimrc<cr>
+else
+	noremap <space>hr :FileSwitch tabe ~/.config/nvim/init.vim<cr>
+endif
+
+
+"----------------------------------------------------------------------
+" visual mode
+"----------------------------------------------------------------------
+vnoremap <space>gp :!python<cr>
+" vmap <space>gs y/<c-r>"<cr>
+vmap <space>gs y/<C-R>=escape(@", '\\/.*$^~[]')<CR>
+vmap <space>gr y:%s/<C-R>=escape(@", '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
+
+
+autocmd BufWritePre *.c,*.cc,*.cpp,*.h,*.hpp  :%s/\s+$//e
