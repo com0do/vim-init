@@ -16,7 +16,7 @@
 if !exists('g:bundle_group')
 	let g:bundle_group = ['basic', 'tags', 'enhanced', 'filetypes', 'textobj']
 	let g:bundle_group += ['tags', 'airline', 'nerdtree', 'ale', 'echodoc']
-	let g:bundle_group += ['leaderf']
+	let g:bundle_group += ['leaderf','opt']
 endif
 
 
@@ -30,6 +30,32 @@ function! s:path(path)
 	return substitute(path, '\\', '/', 'g')
 endfunc
 
+
+"----------------------------------------------------------------------
+" system detection 
+"----------------------------------------------------------------------
+if exists('g:asc_uname')
+	let s:uname = g:asc_uname
+elseif has('win32') || has('win64') || has('win95') || has('win16')
+	let s:uname = 'windows'
+elseif has('win32unix')
+	let s:uname = 'cygwin'
+elseif has('unix')
+	let s:uname = substitute(system("uname"), '\s*\n$', '', 'g')
+	if !v:shell_error && s:uname == "Linux"
+		let s:uname = 'linux'
+	elseif v:shell_error == 0 && match(s:uname, 'Darwin') >= 0
+		let s:uname = 'darwin'
+	else
+		let s:uname = 'posix'
+	endif
+else
+	let s:uname = 'posix'
+endif
+
+
+let g:bundle#uname = s:uname
+let g:bundle#windows = (s:uname == 'windows')? 1 : 0
 
 "----------------------------------------------------------------------
 " 在 ~/.vim/bundles 下安装插件
@@ -122,12 +148,17 @@ if index(g:bundle_group, 'basic') >= 0
     " Git 支持
 	Plug 'tpope/vim-fugitive'
 
+    " 自动保存:InsertLeave/TextChanged
+    Plug '907th/vim-auto-save'
+    let g:auto_save = 1
+
 	" 使用 ALT+E 来选择窗口
 	nmap <m-e> <Plug>(choosewin)
 
 	" 默认不显示 startify
 	let g:startify_disable_at_vimenter = 0
 	let g:startify_session_dir = '~/.vim/session'
+    let g:startify_change_to_dir = 0
 
 	" 使用 <space>ha 清除 errormarker 标注的错误
 	noremap <silent><space>ha :RemoveErrorMarkers<cr>
@@ -194,7 +225,7 @@ if index(g:bundle_group, 'tags') >= 0
 	Plug 'skywind3000/gutentags_plus'
 
 	" 设定项目目录标志：除了 .git/.svn 外，还有 .root 文件
-	let g:gutentags_project_root = ['.root']
+    let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
 	let g:gutentags_ctags_tagfile = '.tags'
 
 	" 默认生成的数据文件集中到 ~/.cache/tags 避免污染项目目录，好清理
@@ -224,6 +255,9 @@ if index(g:bundle_group, 'tags') >= 0
 
 	" 禁止 gutentags 自动链接 gtags 数据库
 	let g:gutentags_auto_add_gtags_cscope = 0
+
+    " 开启调试信息输出
+    "let g:gutentags_define_advanced_commands = 1
 endif
 
 
@@ -466,7 +500,7 @@ if index(g:bundle_group, 'leaderf') >= 0
 		" 模糊匹配忽略扩展名
 		let g:Lf_WildIgnore = {
 					\ 'dir': ['.svn','.git','.hg'],
-					\ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
+					\ 'file': ['*.sw?','~$*','*.bak','*.exe','*.d','*.o','*.so','*.py[co]']
 					\ }
 
 		" MRU 文件忽略扩展名
@@ -521,7 +555,35 @@ if index(g:bundle_group, 'leaderf') >= 0
 	endif
 endif
 
+if index(g:bundle_group, 'opt') >= 0
+	Plug 'tpope/vim-speeddating'
+	Plug 'voldikss/vim-translator'
+	Plug 'mhartington/oceanic-next'
+	Plug 'soft-aesthetic/soft-era-vim'
+	" Plug 'tpope/vim-apathy'
+	" Plug 'mh21/errormarker.vim'
 
+	if executable('tmux')
+		Plug 'benmills/vimux'
+	endif
+
+	if s:uname == 'windows' 
+		let g:python3_host_prog="python"
+	endif
+
+	if 1
+		" Echo translation in the cmdline
+		nmap <silent> <Leader>tt <Plug>Translate
+		vmap <silent> <Leader>tt <Plug>TranslateV
+		" Display translation in a window
+		nmap <silent> <Leader>tw <Plug>TranslateW
+		vmap <silent> <Leader>tw <Plug>TranslateWV
+		" Replace the text with translation
+		nmap <silent> <Leader>tr <Plug>TranslateR
+		vmap <silent> <Leader>tr <Plug>TranslateRV
+		let g:translator_window_enable_icon = v:true
+	endif
+endif
 "----------------------------------------------------------------------
 " 结束插件安装
 "----------------------------------------------------------------------
