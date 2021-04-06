@@ -197,10 +197,12 @@ noremap <m-h> <c-w>h
 noremap <m-l> <c-w>l
 noremap <m-j> <c-w>j
 noremap <m-k> <c-w>k
+noremap <m-o> <c-w>o
 inoremap <m-h> <esc><c-w>h
 inoremap <m-l> <esc><c-w>l
 inoremap <m-j> <esc><c-w>j
 inoremap <m-k> <esc><c-w>k
+inoremap <m-o> <esc><c-w>o
 
 if has('terminal') && exists(':terminal') == 2 && has('patch-8.1.1')
 	" vim 8.1 支持 termwinkey ，不需要把 terminal 切换成 normal 模式
@@ -362,10 +364,10 @@ noremap <space>y yiw
 noremap <C-S> :w<cr>
 inoremap <C-S> <ESC>:w<cr>
 
-noremap <silent><m-t> :tabnew<cr>
-inoremap <silent><m-t> <ESC>:tabnew<cr>
-noremap <silent><m-w> :tabclose<cr>
-inoremap <silent><m-w> <ESC>:tabclose<cr>
+noremap <silent><m-t> :tab term<cr>
+inoremap <silent><m-t> <ESC>:tab term<cr>
+noremap <silent><m-w> :tabnew<cr>
+inoremap <silent><m-w> <ESC>:tabnew<cr>
 noremap <silent><m-v> :close<cr>
 inoremap <silent><m-v> <esc>:close<cr>
 noremap <m-s> :w<cr>
@@ -413,20 +415,21 @@ vnoremap il $o^oh
 "----------------------------------------------------------------------
 " space + j : make
 "----------------------------------------------------------------------
-noremap <silent><space>jj  :AsyncRun -cwd=<root> make<cr>
-noremap <silent><space>jc  :AsyncRun -cwd=<root> make clean<cr>
-noremap <silent><space>jk  :AsyncRun -mode=4 -cwd=<root> make run<cr>
-noremap <silent><space>jl  :AsyncRun -mode=4 -cwd=<root> make test<cr>
-noremap <silent><space>j1  :AsyncRun -mode=4 -cwd=<root> make t1<cr>
-noremap <silent><space>j2  :AsyncRun -mode=4 -cwd=<root> make t2<cr>
-noremap <silent><space>j3  :AsyncRun -mode=4 -cwd=<root> make t3<cr>
-noremap <silent><space>j4  :AsyncRun -mode=4 -cwd=<root> make t4<cr>
-noremap <silent><space>j5  :AsyncRun -mode=4 -cwd=<root> make t5<cr>
-noremap <silent><space>k1  :AsyncRun -cwd=<root> make t1<cr>
-noremap <silent><space>k2  :AsyncRun -cwd=<root> make t2<cr>
-noremap <silent><space>k3  :AsyncRun -cwd=<root> make t3<cr>
-noremap <silent><space>k4  :AsyncRun -cwd=<root> make t4<cr>
-noremap <silent><space>k5  :AsyncRun -cwd=<root> make t5<cr>
+noremap <silent><space>j1  :AsyncRun -mode=term -pos=tab -cwd=<~/install/work/tmp/esp32_mi2x/miio_project> export PATH="/home/carlos/Work/xtensa-esp32-elf/bin:$PATH"; ./yeelight_gen_default.sh enzo 0<cr>
+noremap <silent><space>j1  :AsyncRun -mode=term -pos=tab -cwd=<~/install/work/tmp/esp32_mi2x/miio_project> export PATH="/home/carlos/Work/xtensa-esp32-elf/bin:$PATH"; ./yeelight_gen_default.sh enzo 1<cr>
+"noremap <silent><space>jc  :AsyncRun -cwd=<root> make clean<cr>
+"noremap <silent><space>jk  :AsyncRun -mode=4 -cwd=<root> make run<cr>
+"noremap <silent><space>jl  :AsyncRun -mode=4 -cwd=<root> make test<cr>
+"noremap <silent><space>j1  :AsyncRun -mode=4 -cwd=<root> make t1<cr>
+"noremap <silent><space>j2  :AsyncRun -mode=4 -cwd=<root> make t2<cr>
+"noremap <silent><space>j3  :AsyncRun -mode=4 -cwd=<root> make t3<cr>
+"noremap <silent><space>j4  :AsyncRun -mode=4 -cwd=<root> make t4<cr>
+"noremap <silent><space>j5  :AsyncRun -mode=4 -cwd=<root> make t5<cr>
+"noremap <silent><space>k1  :AsyncRun -cwd=<root> make t1<cr>
+"noremap <silent><space>k2  :AsyncRun -cwd=<root> make t2<cr>
+"noremap <silent><space>k3  :AsyncRun -cwd=<root> make t3<cr>
+"noremap <silent><space>k4  :AsyncRun -cwd=<root> make t4<cr>
+"noremap <silent><space>k5  :AsyncRun -cwd=<root> make t5<cr>
 
 
 "----------------------------------------------------------------------
@@ -449,7 +452,7 @@ if has('autocmd')
 		if &buftype != 'quickfix'
 			return
 		endif
-		nnoremap <silent><buffer> p :call quickui#tools#preview_quickfix()<cr>
+		nnoremap <silent><buffer> p :PreviewQuickfix<cr>
 		nnoremap <silent><buffer> P :PreviewClose<cr>
 		nnoremap <silent><buffer> q :close<cr>
 		setlocal nonumber
@@ -513,7 +516,7 @@ noremap <silent><leader>cw :call Change_DirectoryToFile()<cr>
 "----------------------------------------------------------------------
 noremap <space>hp :FileSwitch tabe ~/.vim/project.txt<cr>
 noremap <space>hl :FileSwitch tabe ~/.vim/cloud/Documents/agenda.otl<cr>
-noremap <space>hf <c-w>gf
+noremap <space>hf <C-W>gf
 noremap <space>he :call Show_Explore()<cr>
 noremap <space>hb :FileSwitch tabe ~/.vim/bundle.vim<cr>
 noremap <space>hq :FileSwitch tabe ~/.vim/quicknote.txt<cr>
