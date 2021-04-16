@@ -348,7 +348,9 @@ if index(g:bundle_group, 'nerdtree') >= 0
 	let g:NERDTreeMinimalUI = 1
 	let g:NERDTreeDirArrows = 1
 	let g:NERDTreeHijackNetrw = 0
-	noremap <space>nn :NERDTree<cr>
+    
+    "NERDTree % or NERDTreeFind can open focus file.
+	noremap <space>nn :NERDTreeFind<cr>
 	noremap <space>no :NERDTreeFocus<cr>
 	noremap <space>nm :NERDTreeMirror<cr>
 	noremap <space>nt :NERDTreeToggle<cr>
@@ -477,7 +479,7 @@ if index(g:bundle_group, 'leaderf') >= 0
 
 		" ALT+m 全局 tags 模糊匹配
 		noremap <m-M> :LeaderfTag<cr>
-        noremap <m-m> :<C-U><C-R>=printf("Leaderf! rg -e %s -g !*.json",expand("<cword>"))<cr><cr>
+        noremap <m-m> :<C-U><C-R>=printf("Leaderf! rg -e %s -g !*.json -g !*.map -g !*.d",expand("<cword>"))<cr><cr>
 
 		" 最大历史文件保存 2048 个
 		let g:Lf_MruMaxFiles = 2048

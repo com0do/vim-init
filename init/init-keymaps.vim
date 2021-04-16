@@ -198,11 +198,13 @@ noremap <m-l> <c-w>l
 noremap <m-j> <c-w>j
 noremap <m-k> <c-w>k
 noremap <m-o> <c-w>o
+noremap <m-=> <c-w>=
 inoremap <m-h> <esc><c-w>h
 inoremap <m-l> <esc><c-w>l
 inoremap <m-j> <esc><c-w>j
 inoremap <m-k> <esc><c-w>k
 inoremap <m-o> <esc><c-w>o
+inoremap <m-=> <esc><c-w>=
 
 if has('terminal') && exists(':terminal') == 2 && has('patch-8.1.1')
 	" vim 8.1 支持 termwinkey ，不需要把 terminal 切换成 normal 模式
@@ -364,8 +366,9 @@ noremap <space>y yiw
 noremap <C-S> :w<cr>
 inoremap <C-S> <ESC>:w<cr>
 
-noremap <silent><m-t> :tab term<cr>
-inoremap <silent><m-t> <ESC>:tab term<cr>
+"noremap <silent><m-t> :tab term<cr>
+noremap <silent><m-t> :vert term<cr>
+inoremap <silent><m-t> <ESC>:vert term<cr>
 noremap <silent><m-w> :tabnew<cr>
 inoremap <silent><m-w> <ESC>:tabnew<cr>
 noremap <silent><m-v> :close<cr>
