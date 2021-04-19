@@ -173,7 +173,7 @@ noremap <m-l> w
 inoremap <m-h> <c-left>
 inoremap <m-l> <c-right>
 
-" ALT+j/k 逻辑跳转下一行/上一行（按 wrap 逻辑换行进行跳转） 
+" ALT+j/k 逻辑跳转下一行/上一行（按 wrap 逻辑换行进行跳转）
 noremap <m-j> gj
 noremap <m-k> gk
 inoremap <m-j> <c-\><c-o>gj
@@ -319,17 +319,17 @@ endfunc
 " 下面进行 grep，这样能方便的对相关项目进行搜索
 "----------------------------------------------------------------------
 if executable('rg')
-	noremap <silent><F2> :AsyncRun! -cwd=<root> rg -n --no-heading 
-				\ --color never -g *.h -g *.c* -g *.py -g *.js -g *.vim 
+	noremap <silent><F2> :AsyncRun! -cwd=<root> rg -n --no-heading
+				\ --color never -g *.h -g *.c* -g *.py -g *.js -g *.vim
 				\ <C-R><C-W> "<root>" <cr>
 elseif has('win32') || has('win64')
-	noremap <silent><F2> :AsyncRun! -cwd=<root> findstr /n /s /C:"<C-R><C-W>" 
+	noremap <silent><F2> :AsyncRun! -cwd=<root> findstr /n /s /C:"<C-R><C-W>"
 				\ "\%CD\%\*.h" "\%CD\%\*.c*" "\%CD\%\*.py" "\%CD\%\*.js"
 				\ "\%CD\%\*.vim"
 				\ <cr>
 else
-	noremap <silent><F2> :AsyncRun! -cwd=<root> grep -n -s -R <C-R><C-W> 
-				\ --include='*.h' --include='*.c*' --include='*.py' 
+	noremap <silent><F2> :AsyncRun! -cwd=<root> grep -n -s -R <C-R><C-W>
+				\ --include='*.h' --include='*.c*' --include='*.py'
 				\ --include='*.js' --include='*.vim'
 				\ '<root>' <cr>
 endif
@@ -445,9 +445,9 @@ noremap <silent><M-:> :PreviewClose<cr>
 noremap <silent><tab>; :PreviewGoto edit<cr>
 noremap <silent><tab>: :PreviewGoto tabe<cr>
 
-noremap  <silent><M-u> :PreviewScroll -1<cr> 
-noremap  <silent><M-d> :PreviewScroll +1<cr> 
-inoremap <silent><M-u>  <c-\> <co>:PreviewScroll -1<cr> 
+noremap  <silent><M-u> :PreviewScroll -1<cr>
+noremap  <silent><M-d> :PreviewScroll +1<cr>
+inoremap <silent><M-u>  <c-\> <co>:PreviewScroll -1<cr>
 inoremap <silent><M-d>  <c-\> <co>:PreviewScroll +1<cr>
 
 if has('autocmd')
