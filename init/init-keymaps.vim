@@ -199,12 +199,14 @@ noremap <m-j> <c-w>j
 noremap <m-k> <c-w>k
 noremap <m-o> <c-w>o
 noremap <m-=> <c-w>=
+noremap <m-v> <c-w>v
 inoremap <m-h> <esc><c-w>h
 inoremap <m-l> <esc><c-w>l
 inoremap <m-j> <esc><c-w>j
 inoremap <m-k> <esc><c-w>k
 inoremap <m-o> <esc><c-w>o
 inoremap <m-=> <esc><c-w>=
+inoremap <m-v> <esc><c-w>v
 
 if has('terminal') && exists(':terminal') == 2 && has('patch-8.1.1')
 	" vim 8.1 支持 termwinkey ，不需要把 terminal 切换成 normal 模式
@@ -371,8 +373,8 @@ noremap <silent><m-t> :vert term<cr>
 inoremap <silent><m-t> <ESC>:vert term<cr>
 noremap <silent><m-w> :tabnew<cr>
 inoremap <silent><m-w> <ESC>:tabnew<cr>
-noremap <silent><m-v> :close<cr>
-inoremap <silent><m-v> <esc>:close<cr>
+noremap <silent><m-c> :close<cr>
+inoremap <silent><m-c> <esc>:close<cr>
 noremap <m-s> :w<cr>
 inoremap <m-s> <esc>:w<cr>
 
@@ -543,8 +545,8 @@ endif
 "----------------------------------------------------------------------
 vnoremap <space>gp :!python<cr>
 " vmap <space>gs y/<c-r>"<cr>
-vmap <space>gs y/<C-R>=escape(@", '\\/.*$^~[]')<CR>
-vmap <space>gr y:%s/<C-R>=escape(@", '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
+vmap <space>vs y/<C-R>=escape(@", '\\/.*$^~[]')<CR>
+vmap <space>vr y:%s/<C-R>=escape(@", '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
 
 
-autocmd BufWritePre *.c,*.cc,*.cpp,*.h,*.hpp  :%s/\s+$//e
+autocmd BufWritePre *.c,*.cc,*.cpp,*.h,*.hpp  :%s/\s\+$//e
