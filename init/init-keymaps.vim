@@ -371,6 +371,8 @@ inoremap <C-S> <ESC>:w<cr>
 "noremap <silent><m-t> :tab term<cr>
 noremap <silent><m-t> :vert term<cr>
 inoremap <silent><m-t> <ESC>:vert term<cr>
+noremap <silent><m-T> :tab term<cr>
+inoremap <silent><m-T> <ESC>:tab term<cr>
 noremap <silent><m-w> :tabnew<cr>
 inoremap <silent><m-w> <ESC>:tabnew<cr>
 noremap <silent><m-c> :close<cr>
@@ -535,6 +537,7 @@ if (!has('nvim')) && (has('win32') || has('win64'))
 	noremap <space>hr :FileSwitch tabe ~/_vimrc<cr>
 elseif !has('nvim')
 	noremap <space>hr :FileSwitch tabe ~/.vimrc<cr>
+	noremap <space>hk :FileSwitch tabe ~/.vim/vim-init/init/init-keymaps.vim<cr>
 else
 	noremap <space>hr :FileSwitch tabe ~/.config/nvim/init.vim<cr>
 endif

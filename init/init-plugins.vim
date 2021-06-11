@@ -479,7 +479,7 @@ if index(g:bundle_group, 'leaderf') >= 0
 
 		" ALT+m 全局 tags 模糊匹配
 		noremap <m-M> :LeaderfTag<cr>
-        noremap <m-m> :<C-U><C-R>=printf("Leaderf! rg -w \"%s\" -g !*.json -g !*.map -g !*.d",expand("<cword>"))<cr><cr>
+        noremap <m-m> :<C-U><C-R>=printf("Leaderf! rg -s -w \"%s\" -g !*.json -g !*.map -g !*.d",expand("<cword>"))<cr><cr>
         noremap <m-b> :<C-U><C-R>=printf("lv /\"%s\"/gj \%",expand("<cword>"))<cr><cr>
 
 		" 最大历史文件保存 2048 个
