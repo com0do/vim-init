@@ -130,6 +130,15 @@ set formatoptions+=B
 " 文件换行符，默认使用 unix 换行符
 set ffs=unix,dos,mac
 
+set cursorline
+
+
+" coc使用的配置
+set hidden
+"set cmdheight=2
+set updatetime=300
+set shortmess+=c
+
 
 "----------------------------------------------------------------------
 " 设置代码折叠
