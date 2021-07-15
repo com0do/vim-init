@@ -474,7 +474,7 @@ if index(g:bundle_group, 'leaderf') >= 0
 		noremap <c-n> :LeaderfMru<cr>
 
 		" ALT+p 打开函数列表，按 i 进入模糊匹配，ESC 退出
-		noremap <m-p> :LeaderfFunction!<cr>
+		noremap <m-p> :LeaderfFunction<cr>
 
 		" ALT+SHIFT+p 打开 tag 列表，i 进入模糊匹配，ESC退出
 		noremap <m-P> :LeaderfBufTag!<cr>
@@ -512,7 +512,7 @@ if index(g:bundle_group, 'leaderf') >= 0
 
 		" 模糊匹配忽略扩展名
 		let g:Lf_WildIgnore = {
-					\ 'dir': ['.svn','.git','.hg'],
+					\ 'dir': ['.svn','.git','.hg','.cache'],
 					\ 'file': ['*.sw?','~$*','*.bak','*.exe','*.d','*.o','*.so','*.py[co]']
 					\ }
 
