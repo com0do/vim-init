@@ -20,11 +20,7 @@ set termguicolors
 set clipboard=unnamed
 
 
-let g:material_theme_style = 'default'
-colorscheme  material
-
-"let g:material_theme_style = 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker' | 'default-community' | 'palenight-community' | 'ocean-community' | 'lighter-community' | 'darker-community'
-"
+colorscheme material
 
 
 highlight WhitespaceEOL ctermbg=red guibg=red
@@ -40,14 +36,12 @@ inoremap jk <ESC>
 nmap <leader>n <Plug>(coc-rename)
 
 "Plug
-call plug#begin('~/.local/share/nvim/plugged')
-Plug 'itchyny/lightline.vim'
+call plug#begin(get(g:,'bundle_home', '~/.vim/bundles'))
 Plug 'mhinz/vim-signify'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'jackguo380/vim-lsp-cxx-highlight'
 Plug 'morhetz/gruvbox'
-Plug 'kaicataldo/material.vim', { 'branch': 'main' }
 Plug 'puremourning/vimspector',
 call plug#end()
 
@@ -131,6 +125,4 @@ let g:Lf_WildIgnore = {
 
 
 let g:vimspector_enable_mappings = 'HUMAN'
-noremap <C-F5>:VimspectorReset<cr>
-
-
+"noremap <C-F5>:VimspectorReset<cr>

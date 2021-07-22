@@ -745,9 +745,6 @@ if index(g:bundle_group, 'coc') >= 0
     " Resume latest coc list.
     nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
-
-    nnoremap <silent><nowait> <space>s  :<C-u>CocList outline<cr>
-    nnoremap <silent><nowait> <leader>S  :<C-u>CocList -I symbols<cr>
     nnoremap <silent><nowait> <leader>e  :<C-u>CocCommand explorer<cr>
     nnoremap <silent><nowait> <leader>h  :<C-u>CocCommand clangd.switchSourceHeader<cr>
 endif
