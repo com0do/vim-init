@@ -255,6 +255,11 @@ if index(g:bundle_group, 'tags') >= 0
 	let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 	let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
+    let g:ctags_version = system('ctags --version')[0:8]
+    if g:ctags_version == "Universal"
+        "let g:gutentags_ctags_extra_args += ['--extras=+q','--output-format=e-ctags']
+    endif
+
 	" 使用 universal-ctags 的话需要下面这行，请反注释
 	" let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 
@@ -756,10 +761,10 @@ if index(g:bundle_group, 'YouCompleteMe') >= 0
     nmap <leader>rn :YcmCompleter RefactorRename 
 
     " GoTo code navigation.
-    nmap <silent> gd :YcmCompleter GetType
-    "nmap <silent> gy <Plug>(coc-type-definition)
-    "nmap <silent> gi <Plug>(coc-implementation)
-    nmap <silent> gr :YcmCompleter GoToReferences
+    nmap <silent> gd :YcmCompleter GoToDefinition<CR>
+    nmap <silent> gy :YcmCompleter GoToSymbol<CR>
+    nmap <silent> gi :YcmCompleter GoToImplementation<CR>
+    nmap <silent> gr :YcmCompleter GoToReferences<CR>
 
 endif
 
@@ -786,10 +791,11 @@ let g:ycm_server_log_level = 'info'
 let g:ycm_min_num_identifier_candidate_chars = 2
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_complete_in_strings=1
-let g:ycm_key_invoke_completion = '<c-z>'
+let g:ycm_key_invoke_completion = '<m-x>'
+let g:ycm_disable_signature_help = 1
 set completeopt=menu,menuone,noselect
 
-" noremap <c-z> <NOP>
+noremap <m-x> <NOP>
 
 " 两个字符自动触发语义补全
 let g:ycm_semantic_triggers =  {

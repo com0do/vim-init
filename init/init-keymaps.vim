@@ -361,8 +361,10 @@ noremap <silent><space>ha :GuiSignRemove
 			\ errormarker_error errormarker_warning<cr>
 
 " replace
-noremap <space>p viw"0p
-noremap <space>y yiw
+"noremap <space>p viw"0p
+"noremap <space>y yiw
+noremap <space>p "+p
+noremap <space>y "+y
 
 " fast save
 noremap <C-S> :w<cr>
