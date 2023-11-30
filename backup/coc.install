@@ -1,0 +1,19 @@
+Install
+    curl -sL install-node.now.sh/lts | sudo bash
+    vim Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+CocInstall
+    coc-yank        
+    coc-snippets    
+    coc-highlight   
+    coc-explorer    
+    coc-emmet       
+    coc-clangd      
+    coc-json        
+    coc-yaml
+
+CocCommand
+    CocCommand clangd.install
+
+compile_commands.json
+    [LINK](https://clangd.llvm.org/installation.html#project-setup)

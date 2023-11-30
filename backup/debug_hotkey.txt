@@ -1,0 +1,14 @@
+
+
+## HUMAN hotkey
+
+- F3 : stop
+- F4 : restart
+- F5 : continue / start debugging
+- F6 : pause
+- F8 : add function breakpoint
+- F9 : toggle line breakpoint on the current line
+- <leader>F9 : toggle conditional line breakpoint on the current line
+- F10: step over
+- F11: step into
+- F12: step out of current fucntion scope

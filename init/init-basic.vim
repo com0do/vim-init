@@ -41,6 +41,16 @@ set ttimeoutlen=50
 " 显示光标位置
 set ruler
 
+" ME
+set relativenumber
+set autoread
+set cursorline
+"set expandtab
+
+" coc 使用的配置
+set hidden
+set updatetime=500
+set shortmess+=c
 
 "----------------------------------------------------------------------
 " 搜索设置

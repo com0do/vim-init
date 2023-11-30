@@ -1,6 +1,6 @@
 "======================================================================
 "
-" init-plugins.vim - 
+" init-plugins.vim -
 "
 " Created by skywind on 2018/05/31
 " Last Modified: 2018/06/10 23:11
@@ -9,14 +9,21 @@
 " vim: set ts=4 sw=4 tw=78 noet :
 
 
-
+let g:completion_type = ['coc']
 "----------------------------------------------------------------------
 " 默认情况下的分组，可以再前面覆盖之
 "----------------------------------------------------------------------
 if !exists('g:bundle_group')
-	let g:bundle_group = ['basic', 'tags', 'enhanced', 'filetypes', 'textobj']
-	let g:bundle_group += ['tags', 'airline', 'nerdtree', 'ale', 'echodoc']
-	let g:bundle_group += ['leaderf']
+	let g:bundle_group = ['basic', 'tags', 'enhanced', 'filetypes', 'textobj', 'markdown']
+	let g:bundle_group += ['airline', 'nerdtree']
+	let g:bundle_group += ['leaderf','opt', 'clang-format']
+	"let g:bundle_group += ['gdb']
+	let g:bundle_group += ['go']
+    if index(g:completion_type, 'coc') >= 0
+        let g:bundle_group += ['coc']
+    else
+        let g:bundle_group += ['ale', 'echodoc', 'YouCompleteMe' ]
+    endif
 endif
 
 
@@ -103,6 +110,10 @@ if index(g:bundle_group, 'basic') >= 0
 	" 用于在侧边符号栏显示 marks （ma-mz 记录的位置）
 	Plug 'kshenoy/vim-signature'
 
+	" 高亮字符
+	Plug 'inkarkat/vim-ingo-library'
+	Plug 'inkarkat/vim-mark'
+
 	" 用于在侧边符号栏显示 git/svn 的 diff
 	Plug 'mhinz/vim-signify'
 
@@ -118,13 +129,19 @@ if index(g:bundle_group, 'basic') >= 0
 
 	" Git 支持
 	Plug 'tpope/vim-fugitive'
+    Plug 'junegunn/gv.vim'
+
+	" 自动保存:InsertLeave/TextChanged
+	Plug '907th/vim-auto-save'
+	let g:auto_save = 1
 
 	" 使用 ALT+E 来选择窗口
 	nmap <m-e> <Plug>(choosewin)
 
 	" 默认不显示 startify
-	let g:startify_disable_at_vimenter = 1
+	let g:startify_disable_at_vimenter = 0
 	let g:startify_session_dir = '~/.vim/session'
+	let g:startify_change_to_dir = 0
 
 	" 使用 <space>ha 清除 errormarker 标注的错误
 	noremap <silent><space>ha :RemoveErrorMarkers<cr>
@@ -153,10 +170,17 @@ if index(g:bundle_group, 'enhanced') >= 0
 	Plug 'terryma/vim-expand-region'
 
 	" 快速文件搜索
-	Plug 'junegunn/fzf'
+	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 	" 给不同语言提供字典补全，插入模式下 c-x c-k 触发
-	Plug 'asins/vim-dict'
+	"Plug 'asins/vim-dict'
+	Plug 'skywind3000/vim-dict'
+	let g:vim_dict_config = {'html':'html,javascript,css', 'markdown':'text'}
+
+	Plug 'skywind3000/vim-auto-popmenu'
+	let g:apc_enable_ft = {'text':1, 'markdown':1}
+	"let g:apc_enable_ft = '*'
+	set cpt=.,k,w,b
 
 	" 使用 :FlyGrep 命令进行实时 grep
 	Plug 'wsdjeg/FlyGrep.vim'
@@ -169,10 +193,27 @@ if index(g:bundle_group, 'enhanced') >= 0
 
 	" 提供 gist 接口
 	Plug 'lambdalisue/vim-gista', { 'on': 'Gista' }
-	
+
+	" 显示函数名称到最顶行
+	Plug 'wellle/context.vim'
+
+	" 环绕字符编辑
+	Plug 'tpope/vim-surround'
+
 	" ALT_+/- 用于按分隔符扩大缩小 v 选区
 	map <m-=> <Plug>(expand_region_expand)
 	map <m--> <Plug>(expand_region_shrink)
+    "noremap <m-m> :CtrlSF<cr>
+    let g:ctrlsf_position = 'bottom'
+    let g:ctrlsf_auto_close = {"normal" : 0, "compact": 0}
+    let g:ctrlsf_auto_focus = {"at": "start"}
+    let g:ctrlsf_context = '-B 1 -A 1'
+    let g:ctrlsf_default_root = 'project'
+    let g:ctrlsf_default_view_mode = 'compact'
+    let g:ctrlsf_extra_root_markers = ['.git', '.root']
+    let g:ctrlsf_extra_backend_args = {
+        \ 'rg': '-g *.cxx -g *.h',
+        \ }
 endif
 
 
@@ -185,20 +226,21 @@ if index(g:bundle_group, 'tags') >= 0
 
 	" 提供 ctags/gtags 后台数据库自动更新功能
 	Plug 'skywind3000/vim-gutentags'
+	Plug 'preservim/tagbar'
 
 	" 提供 GscopeFind 命令并自动处理好 gtags 数据库切换
 	" 支持光标移动到符号名上：<leader>cg 查看定义，<leader>cs 查看引用
 	Plug 'skywind3000/gutentags_plus'
 
 	" 设定项目目录标志：除了 .git/.svn 外，还有 .root 文件
-	let g:gutentags_project_root = ['.root']
+	let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
 	let g:gutentags_ctags_tagfile = '.tags'
 
 	" 默认生成的数据文件集中到 ~/.cache/tags 避免污染项目目录，好清理
 	let g:gutentags_cache_dir = expand('~/.cache/tags')
 
 	" 默认禁用自动生成
-	let g:gutentags_modules = [] 
+	let g:gutentags_modules = []
 
 	" 如果有 ctags 可执行就允许动态生成 ctags 文件
 	if executable('ctags')
@@ -216,11 +258,22 @@ if index(g:bundle_group, 'tags') >= 0
 	let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 	let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
+    let g:ctags_version = system('ctags --version')[0:8]
+    if g:ctags_version == "Universal"
+        "let g:gutentags_ctags_extra_args += ['--extras=+q','--output-format=e-ctags']
+    endif
+
 	" 使用 universal-ctags 的话需要下面这行，请反注释
 	" let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 
+	" 搜索时更改焦点到quickfix窗口
+	let g:gutentags_plus_switch = 1
+
 	" 禁止 gutentags 自动链接 gtags 数据库
 	let g:gutentags_auto_add_gtags_cscope = 0
+
+    " 开启调试信息输出
+    "let g:gutentags_define_advanced_commands = 1
 endif
 
 
@@ -264,7 +317,8 @@ if index(g:bundle_group, 'filetypes') >= 0
 	Plug 'tbastos/vim-lua', { 'for': 'lua' }
 
 	" C++ 语法高亮增强，支持 11/14/17 标准
-	Plug 'octol/vim-cpp-enhanced-highlight', { 'for': ['c', 'cpp'] }
+	Plug 'octol/vim-cpp-enhanced-highlight', { 'for': ['c', 'cpp', 'cxx', 'h', 'hpp', 'cc'] }
+	"Plug 'jackguo380/vim-lsp-cxx-highlight', { 'for': ['c', 'cpp', 'cxx', 'h'] }
 
 	" 额外语法文件
 	Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'bison', 'flex', 'cpp'] }
@@ -275,8 +329,17 @@ if index(g:bundle_group, 'filetypes') >= 0
 	" rust 语法增强
 	Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 
-	" vim org-mode 
+	" vim org-mode
 	Plug 'jceb/vim-orgmode', { 'for': 'org' }
+
+    let g:cpp_class_scope_highlight = 1
+    let g:cpp_member_variable_highlight = 1
+    let g:cpp_class_decl_highlight = 1
+    let g:cpp_posix_standard = 1
+    let g:cpp_experimental_simple_template_highlight = 1
+    let g:cpp_experimental_template_highlight = 1
+    let g:cpp_concepts_highlight = 1
+
 endif
 
 
@@ -292,13 +355,13 @@ if index(g:bundle_group, 'airline') >= 0
 	let g:airline_right_alt_sep = ''
 	let g:airline_powerline_fonts = 0
 	let g:airline_exclude_preview = 1
-	let g:airline_section_b = '%n'
+	"let g:airline_section_b = '%n'
 	let g:airline_theme='deus'
-	let g:airline#extensions#branch#enabled = 0
-	let g:airline#extensions#syntastic#enabled = 0
-	let g:airline#extensions#fugitiveline#enabled = 0
-	let g:airline#extensions#csv#enabled = 0
-	let g:airline#extensions#vimagit#enabled = 0
+	"let g:airline#extensions#branch#enabled = 0
+	"let g:airline#extensions#syntastic#enabled = 0
+	"let g:airline#extensions#fugitiveline#enabled = 0
+	"let g:airline#extensions#csv#enabled = 0
+	"let g:airline#extensions#vimagit#enabled = 0
 endif
 
 
@@ -308,6 +371,7 @@ endif
 if index(g:bundle_group, 'nerdtree') >= 0
 	Plug 'scrooloose/nerdtree', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind'] }
 	Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+    Plug 'ryanoasis/vim-devicons'
 	let g:NERDTreeMinimalUI = 1
 	let g:NERDTreeDirArrows = 1
 	let g:NERDTreeHijackNetrw = 0
@@ -362,13 +426,13 @@ if index(g:bundle_group, 'ale') >= 0
 
 	" 编辑不同文件类型需要的语法检查器
 	let g:ale_linters = {
-				\ 'c': ['gcc', 'cppcheck'], 
-				\ 'cpp': ['gcc', 'cppcheck'], 
-				\ 'python': ['flake8', 'pylint'], 
-				\ 'lua': ['luac'], 
+				\ 'c': ['gcc', 'cppcheck'],
+				\ 'cpp': ['gcc', 'cppcheck'],
+				\ 'python': ['flake8', 'pylint'],
+				\ 'lua': ['luac'],
 				\ 'go': ['go build', 'gofmt'],
 				\ 'java': ['javac'],
-				\ 'javascript': ['eslint'], 
+				\ 'javascript': ['eslint'],
 				\ }
 
 
@@ -430,7 +494,7 @@ if index(g:bundle_group, 'leaderf') >= 0
 		noremap <c-n> :LeaderfMru<cr>
 
 		" ALT+p 打开函数列表，按 i 进入模糊匹配，ESC 退出
-		noremap <m-p> :LeaderfFunction!<cr>
+		noremap <m-p> :LeaderfFunction<cr>
 
 		" ALT+SHIFT+p 打开 tag 列表，i 进入模糊匹配，ESC退出
 		noremap <m-P> :LeaderfBufTag!<cr>
@@ -439,7 +503,12 @@ if index(g:bundle_group, 'leaderf') >= 0
 		noremap <m-n> :LeaderfBuffer<cr>
 
 		" ALT+m 全局 tags 模糊匹配
-		noremap <m-m> :LeaderfTag<cr>
+		noremap <m-M> :LeaderfTag<cr>
+        "noremap <m-m> :<C-U><C-R>=printf("Leaderf! rg -s -w \"%s\" -g !*test* -g !*.orig -g !*.json -g !*.map -g !*.d",expand("<cword>"))<cr><cr>
+        noremap <m-m> :<C-U><C-R>=printf("Leaderf! rg -s -w \"%s\" -g !*.log -g !*.orig -g !*.json -g !*.map -g !*.d",expand("<cword>"))<cr><cr>
+        "noremap <m-b> :<C-U><C-R>=printf("lv /\"%s\"/gj \%",expand("<cword>"))<cr><cr>
+        noremap <m-r> :LeaderfHistoryCmd<CR>
+        noremap <m-b> :lv /<C-R>=expand("<cword>")<CR>/gj % <CR>
 
 		" 最大历史文件保存 2048 个
 		let g:Lf_MruMaxFiles = 2048
@@ -453,6 +522,14 @@ if index(g:bundle_group, 'leaderf') >= 0
 		let g:Lf_WindowHeight = 0.30
 		let g:Lf_CacheDirectory = expand('~/.vim/cache')
 
+        let g:Lf_RecurseSubmodules = 1
+        "let g:Lf_DefaultMode = "Regex"
+        "let g:Lf_UseVersionControlTool = 0
+        "let g:Lf_DefaultExternalTool = "rg"
+        "let g:Lf_UseCache = 0
+        "let g:Lf_WindowPosition = 'popup'
+        "let g:Lf_PreviewInPopup = 1
+
 		" 显示绝对路径
 		let g:Lf_ShowRelativePath = 0
 
@@ -461,8 +538,8 @@ if index(g:bundle_group, 'leaderf') >= 0
 
 		" 模糊匹配忽略扩展名
 		let g:Lf_WildIgnore = {
-					\ 'dir': ['.svn','.git','.hg'],
-					\ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
+					\ 'dir': ['.svn','.git','.hg','.cache','*test*'],
+					\ 'file': ['*.sw?','~$*','*.bak','*.exe','*.d','*.o','*.so','*.py[co]']
 					\ }
 
 		" MRU 文件忽略扩展名
@@ -470,7 +547,18 @@ if index(g:bundle_group, 'leaderf') >= 0
 		let g:Lf_StlColorscheme = 'powerline'
 
 		" 禁用 function/buftag 的预览功能，可以手动用 p 预览
-		let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
+        let g:Lf_PreviewResult = {
+            \ 'File': 0,
+            \ 'Buffer': 0,
+            \ 'Mru': 0,
+            \ 'Tag': 0,
+            \ 'BufTag': 0,
+            \ 'Function': 0,
+            \ 'Line': 1,
+            \ 'Colorscheme': 1,
+            \ 'Rg': 1,
+            \ 'Gtags': 0
+            \}
 
 		" 使用 ESC 键可以直接退出 leaderf 的 normal 模式
 		let g:Lf_NormalMap = {
@@ -517,10 +605,280 @@ if index(g:bundle_group, 'leaderf') >= 0
 	endif
 endif
 
+if index(g:bundle_group, 'opt') >= 0
+	Plug 'tpope/vim-speeddating'
+	Plug 'voldikss/vim-translator'
+	Plug 'mbbill/undotree'
+    Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlight-all-pragmas moose test-more try-tiny' }
+
+    if executable('tmux')
+		Plug 'benmills/vimux'
+	endif
+
+    let g:asyncrun_open = 6
+    let g:asynctasks_term_pos = 'right'
+    let g:asynctasks_term_reuse = 1
+    let g:asynctasks_term_focus = 0
+	if 1
+		" Echo translation in the cmdline
+		nmap <silent> <Leader>tt <Plug>Translate
+		vmap <silent> <Leader>tt <Plug>TranslateV
+		" Display translation in a window
+		nmap <silent> <Leader>tw <Plug>TranslateW
+		vmap <silent> <Leader>tw <Plug>TranslateWV
+		" Replace the text with translation
+		nmap <silent> <Leader>tr <Plug>TranslateR
+		vmap <silent> <Leader>tr <Plug>TranslateRV
+		let g:translator_window_enable_icon = v:true
+	endif
+endif
+
+
+if index(g:bundle_group, 'gdb') >= 0
+    Plug 'puremourning/vimspector'
+
+    let g:vimspector_enable_mappings = 'HUMAN'
+
+endif
+
+if index(g:bundle_group, 'go') >= 0
+    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+    let g:go_gopls_enabled = 0
+    let g:go_diagnostics_enabled = 0
+    let g:go_def_mapping_enabled = 0
+    let g:go_code_completion_enabled = 0
+    let g:go_doc_keywordprg_enabled = 0
+    let g:go_fmt_autosave = 0
+    let g:go_imports_autosave = 0
+
+    let g:go_debug_windows = {
+                \ 'vars':       'leftabove 40vnew',
+                \ 'stack':      'leftabove 5new',
+                \ 'goroutines': 'botright 10new',
+                \ 'out':        'botright 5new',
+                \ }
+
+    "autocmd BufWriteCmd *.go call go#fmt#Format(1)
+    "nnoremap gat :GoAddTags<CR>
+    "nnoremap grt :GoRemoveTags<CR>
+    "nnoremap gi  :GoImports<CR>
+    "nnoremap gfs :GoFillStruct<CR>
+endif
+
+if index(g:bundle_group, 'clang-format') >= 0
+    Plug 'rhysd/vim-clang-format'
+
+    "autocmd FileType c ClangFormatAutoEnable
+    let g:clang_format#command = 'clang-format-9'
+    let g:clang_format#detect_style_file = 1
+    "nmap <leader>cf :ClangFormat<cr>
+
+endif
+
+if index(g:bundle_group, 'coc') >= 0
+    "Plug 'Yggdroot/indentLine'
+    "Plug 'scrooloose/nerdcommenter'
+    "Plug 'jlanzarotta/bufexplorer'
+    "Plug 'crusoexia/vim-monokai'
+    "Plug 'luochen1990/rainbow'
+    "Plug 'itchyny/lightline.vim'
+    "Plug 'honza/vim-snippets'
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+    let g:coc_disable_startup_warning = 1
+    let g:coc_global_extensions = ['coc-json', 'coc-yank', 'coc-highlight', 'coc-explorer', 'coc-pyright', 'coc-cmake', 'coc-clangd', 'coc-task' ]
+
+    nnoremap <silent> Y :<C-u>CocList -A --normal yank<cr>
+    nnoremap <silent><leader>lc :<C-u>CocList changes<cr>
+
+    " Use tab for trigger completion with characters ahead and navigate.
+    " NOTE: There's always complete item selected by default, you may want to enable
+    " no select by `"suggest.noselect": true` in your configuration file.
+    " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+    " other plugin before putting this into your config.
+    inoremap <silent><expr> <TAB>
+                \ coc#pum#visible() ? coc#pum#next(1) :
+                \ CheckBackspace() ? "\<Tab>" :
+                \ coc#refresh()
+    inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+    " Make <CR> to accept selected completion item or notify coc.nvim to format
+    " <C-g>u breaks current undo, please make your own choice.
+    inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+    function! CheckBackspace() abort
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+
+    " Use <c-space> to trigger completion.
+    if has('nvim')
+        inoremap <silent><expr> <c-space> coc#refresh()
+    else
+        inoremap <silent><expr> <c-@> coc#refresh()
+    endif
+
+    " Use `[g` and `]g` to navigate diagnostics
+    " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+    nmap <silent> [g <Plug>(coc-diagnostic-prev)
+    nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+    " GoTo code navigation.
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
+
+    " Use K to show documentation in preview window.
+    nnoremap <silent> K :call ShowDocumentation()<CR>
+
+    function! ShowDocumentation()
+        if CocAction('hasProvider', 'hover')
+            call CocActionAsync('doHover')
+        else
+            call feedkeys('K', 'in')
+        endif
+    endfunction
+
+    " Highlight the symbol and its references when holding the cursor.
+    autocmd CursorHold * silent call CocActionAsync('highlight')
+
+    " Symbol renaming.
+    nmap <leader>rn <Plug>(coc-rename)
+
+    " Formatting selected code.
+    xmap <leader>f  <Plug>(coc-format-selected)
+    nmap <leader>f  <Plug>(coc-format-selected)
+
+    augroup mygroup
+        autocmd!
+        " Setup formatexpr specified filetype(s).
+        autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+        " Update signature help on jump placeholder.
+        autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    augroup end
+
+    " Applying codeAction to the selected region.
+    " Example: `<leader>aap` for current paragraph
+    xmap <leader>a  <Plug>(coc-codeaction-selected)
+    nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+    " Remap keys for applying codeAction to the current buffer.
+    nmap <leader>ac  <Plug>(coc-codeaction)
+    " Apply AutoFix to problem on the current line.
+    nmap <leader>qf  <Plug>(coc-fix-current)
+
+    " Run the Code Lens action on the current line.
+    nmap <leader>cl  <Plug>(coc-codelens-action)
+
+    " Map function and class text objects
+    " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+    xmap if <Plug>(coc-funcobj-i)
+    omap if <Plug>(coc-funcobj-i)
+    xmap af <Plug>(coc-funcobj-a)
+    omap af <Plug>(coc-funcobj-a)
+    xmap ic <Plug>(coc-classobj-i)
+    omap ic <Plug>(coc-classobj-i)
+    xmap ac <Plug>(coc-classobj-a)
+    omap ac <Plug>(coc-classobj-a)
+
+    " Remap <C-f> and <C-b> for scroll float windows/popups.
+    if has('nvim-0.4.0') || has('patch-8.2.0750')
+        nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+        nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+        inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+        inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+        vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+        vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+    endif
+
+    " Use CTRL-S for selections ranges.
+    " Requires 'textDocument/selectionRange' support of language server.
+    nmap <silent> <C-s> <Plug>(coc-range-select)
+    xmap <silent> <C-s> <Plug>(coc-range-select)
+
+    " Add `:Format` command to format current buffer.
+    command! -nargs=0 Format :call CocActionAsync('format')
+
+    " Add `:Fold` command to fold current buffer.
+    command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+    " Add `:OR` command for organize imports of the current buffer.
+    command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+
+    " Add (Neo)Vim's native statusline support.
+    " NOTE: Please see `:h coc-status` for integrations with external plugins that
+    " provide custom statusline: lightline.vim, vim-airline.
+    set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+    " Mappings for CoCList
+    " Show all diagnostics.
+    nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+    " Manage extensions.
+    "nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+    " Show commands.
+    nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+    " Find symbol of current document.
+    nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+    " Search workspace symbols.
+    nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+    " Do default action for next item.
+    nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+    " Do default action for previous item.
+    nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+    " Resume latest coc list.
+    nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+    nnoremap <silent><nowait> <space>e  :<C-u>CocCommand explorer<cr>
+    nnoremap <silent><nowait> <leader>h  :<C-u>CocCommand clangd.switchSourceHeader<cr>
+endif
+
+if index(g:bundle_group, 'YouCompleteMe') >= 0
+    Plug 'Valloric/YouCompleteMe'
+    Plug 'derekwyatt/vim-fswitch'
+    "Plug 'jiangmiao/auto-pairs'
+
+    " Symbol renaming.
+    nmap <leader>rn :YcmCompleter RefactorRename 
+    nmap <leader>h  :FSHere<CR>
+
+    " GoTo code navigation.
+    nmap <silent> gd :YcmCompleter GoToDefinition<CR>
+    nmap <silent> gy :<C-U><C-R>=printf("YcmCompleter GoToSymbol %s",expand("<cword>"))<CR><CR>
+    nmap <silent> gi :YcmCompleter GoToImplementation<CR>
+    nmap <silent> gr :YcmCompleter GoToReferences<CR>
+    nmap <silent> gf :YcmCompleter FixIt<CR>
+    nmap <silent> gh <plug>(YCMHover)
+
+    "nnoremap [d :YcmCompleter GoToDefinitionElseDeclaration<CR>
+    "nnoremap [l :YcmCompleter GoTo<CR>
+    "nnoremap [t :YcmCompleter GetType<CR>
+    "nnoremap [p :YcmCompleter GetParent<CR>
+    "nnoremap [o :YcmCompleter GetDoc<CR>
+    "nnoremap [c :YcmCompleter GoToDeclaration<CR>
+    "nnoremap [f :YcmCompleter GoToDefinition<CR>
+    "nnoremap [i :YcmCompleter GoToInclude<CR>
+
+    let g:ycm_language_server =
+                \ [
+                \   {
+                \     'name': 'cmake',
+                \     'cmdline': [ 'cmake-language-server' ],
+                \     'filetypes': [ 'cmake' ],
+                \     'initializationOptions':{
+                \       'buildDirectory': [ 'build' ],
+                \     },
+                \   },
+                \  ]
+endif
+
 
 "----------------------------------------------------------------------
 " 结束插件安装
 "----------------------------------------------------------------------
+
 call plug#end()
 
 
@@ -529,6 +887,7 @@ call plug#end()
 " YouCompleteMe 默认设置：YCM 需要你另外手动编译安装
 "----------------------------------------------------------------------
 
+let g:ycm_confirm_extra_conf = 0
 " 禁用预览功能：扰乱视听
 let g:ycm_add_preview_to_completeopt = 0
 
@@ -538,10 +897,15 @@ let g:ycm_server_log_level = 'info'
 let g:ycm_min_num_identifier_candidate_chars = 2
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_complete_in_strings=1
-let g:ycm_key_invoke_completion = '<c-z>'
+let g:ycm_key_invoke_completion = '<m-x>'
+let g:ycm_disable_signature_help = 1
+let g:ycm_auto_hover = ''
 set completeopt=menu,menuone,noselect
 
-" noremap <c-z> <NOP>
+noremap <m-x> <NOP>
+
+" 禁止自定添加头文件
+let g:ycm_clangd_args=['--header-insertion=never']
 
 " 两个字符自动触发语义补全
 let g:ycm_semantic_triggers =  {
@@ -550,19 +914,20 @@ let g:ycm_semantic_triggers =  {
 			\ }
 
 
+let g:ycm_filetype_blacklist = {'text':1, 'markdown':1}
 "----------------------------------------------------------------------
 " Ycm 白名单（非名单内文件不启用 YCM），避免打开个 1MB 的 txt 分析半天
 "----------------------------------------------------------------------
-let g:ycm_filetype_whitelist = { 
+let g:ycm_filetype_whitelist = {
 			\ "c":1,
-			\ "cpp":1, 
+			\ "cpp":1,
 			\ "objc":1,
 			\ "objcpp":1,
 			\ "python":1,
 			\ "java":1,
 			\ "javascript":1,
 			\ "coffee":1,
-			\ "vim":1, 
+			\ "vim":1,
 			\ "go":1,
 			\ "cs":1,
 			\ "lua":1,
