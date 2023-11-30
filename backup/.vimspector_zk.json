@@ -1,0 +1,44 @@
+{
+    "configurations": {
+        "arm-gdb": {
+            "adapter": "vscode-cpptools",
+            "variables": {
+                "Bin": "/home/aatrox/workspace/hc32f460/hc32f460/cmake-build-debug/hc32f460.elf",
+                "armGDB": "/home/aatrox/tools/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gdb"
+            },
+            "configuration": {
+                "type":    "cppdbg",
+                "request": "launch",
+                "program": "${Bin}",
+                "cwd": "${workspaceRoot}",
+                "environment": [],
+                "externalConsole": true,
+                "stopAtEntry": true,
+                "MIMode": "gdb",
+                "miDebuggerPath": "${armGDB}",
+                "setupCommands": [
+                    {
+                        "description": "Set Bin ",
+                        "text": "file ${Bin}",
+                        "ignoreFailures": false
+                    },
+                    {
+                        "description": "set target",
+                        "text": "target remote :3333",
+                        "ignoreFailures": false
+                    },
+                    {
+                        "description": "reset",
+                        "text": "monitor reset halt",
+                        "ignoreFailures": false
+                    },
+                    {
+                        "description": "reboot",
+                        "text": "load",
+                        "ignoreFailures": false
+                    }
+                ]
+            }
+        }
+    }
+}

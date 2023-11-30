@@ -1,0 +1,61 @@
+# vim: set fenc=utf-8 ft=dosini:
+# see: https://github.com/skywind3000/asynctasks.vim/wiki/Task-Config
+
+[+]
+#debug_shell=1
+#target_build=lib_depend
+target_run=test_NefSubscription
+target_makefile=deployment/make/Makefile
+target_module=$(for i in $(cat production/aps-releases/ALL-components.txt); do [ $i == ${VIM_RELDIR%%/*} ] && echo $i ;done)
+
+[file-build]
+
+# shell command, use quotation for filenames containing spaces
+# check ":AsyncTaskMacro" to see available macros
+command=module=$(+target_module); [ ${module} ] && (. environment.sh ; ${MAKE} -f ${module}/$(+target_makefile) -j $(-target:&all,&lib_depend))
+
+# working directory, can change to $(VIM_ROOT) for project root
+cwd=$(VIM_ROOT)
+
+# output mode, can be one of quickfix and terminal
+# - quickfix: output to quickfix window
+# - terminal: run the command in the internal terminal
+output=terminal
+#pos=tab
+
+# this is for output=quickfix only
+# if it is omitted, vim's current errorformat will be used.
+errorformat=%f:%l:%m
+
+# save file before execute
+save=1
+
+
+# define a new task named "file-build"
+[file-run]
+
+# shell command, use quotation for filenames containing spaces
+# check ":AsyncTaskMacro" to see available macros
+command=DEBUG_SHELL=$(+debug_shell:0) ; module=$(+target_module); [ ${module} ] && (rm -fr ${module}/tests/logs/* unittest/coverage_output/* && unittest/scripts/run_ut.py $(+target_local:${module}) --j 32 --co)
+
+# working directory, can change to $(VIM_ROOT) for project root
+cwd=$(VIM_ROOT)
+
+# output mode, can be one of quickfix and terminal
+# - quickfix: output to quickfix window
+# - terminal: run the command in the internal terminal
+output=terminal
+#pos=tab
+
+# this is for output=quickfix only
+# if it is omitted, vim's current errorformat will be used.
+errorformat=%f:%l:%m
+
+# save file before execute
+save=1
+
+[o.log]
+command=true> o.log; find . -name *.o.log -exec cat {} >> o.log \; 
+cwd=$(VIM_ROOT)
+output=quickfix
+errorformat=%f:%l:%m
