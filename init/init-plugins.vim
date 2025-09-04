@@ -18,7 +18,7 @@ if !exists('g:bundle_group')
 	let g:bundle_group += ['airline', 'nerdtree']
 	let g:bundle_group += ['leaderf','opt', 'clang-format']
 	"let g:bundle_group += ['gdb']
-	let g:bundle_group += ['go']
+	"let g:bundle_group += ['go']
     if index(g:completion_type, 'coc') >= 0
         let g:bundle_group += ['coc']
     else
@@ -200,6 +200,9 @@ if index(g:bundle_group, 'enhanced') >= 0
 	" 环绕字符编辑
 	Plug 'tpope/vim-surround'
 
+	" UNIX 命令语法糖
+	Plug 'tpope/vim-eunuch'
+
 	" ALT_+/- 用于按分隔符扩大缩小 v 选区
 	map <m-=> <Plug>(expand_region_expand)
 	map <m--> <Plug>(expand_region_shrink)
@@ -238,6 +241,7 @@ if index(g:bundle_group, 'tags') >= 0
 
 	" 默认生成的数据文件集中到 ~/.cache/tags 避免污染项目目录，好清理
 	let g:gutentags_cache_dir = expand('~/.cache/tags')
+    let g:gutentags_generate_on_write = 0
 
 	" 默认禁用自动生成
 	let g:gutentags_modules = []
@@ -556,7 +560,7 @@ if index(g:bundle_group, 'leaderf') >= 0
             \ 'Function': 0,
             \ 'Line': 1,
             \ 'Colorscheme': 1,
-            \ 'Rg': 1,
+            \ 'Rg': 0,
             \ 'Gtags': 0
             \}
 
@@ -629,7 +633,8 @@ if index(g:bundle_group, 'opt') >= 0
 		" Replace the text with translation
 		nmap <silent> <Leader>tr <Plug>TranslateR
 		vmap <silent> <Leader>tr <Plug>TranslateRV
-		let g:translator_window_enable_icon = v:true
+		"let g:translator_window_enable_icon = v:true
+		"let g:translator_proxy_url = 'http://10.158.100.1:8080'
 	endif
 endif
 
@@ -644,9 +649,9 @@ endif
 if index(g:bundle_group, 'go') >= 0
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
-    let g:go_gopls_enabled = 0
-    let g:go_diagnostics_enabled = 0
-    let g:go_def_mapping_enabled = 0
+    let g:go_gopls_enabled = 1
+    let g:go_diagnostics_enabled = 1
+    let g:go_def_mapping_enabled = 1
     let g:go_code_completion_enabled = 0
     let g:go_doc_keywordprg_enabled = 0
     let g:go_fmt_autosave = 0
@@ -727,6 +732,7 @@ if index(g:bundle_group, 'coc') >= 0
 
     " GoTo code navigation.
     nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gD :call CocAction('jumpDefinition', 'vsplit')<CR>
     nmap <silent> gy <Plug>(coc-type-definition)
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gr <Plug>(coc-references)

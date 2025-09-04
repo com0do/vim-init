@@ -7,9 +7,9 @@ so ~/.vim/vim-init/init.vim
 
 " end 韦神-------------------------------------------------
 
-set expandtab
 set noautochdir
-set guifont=Monospace\ 16
+"set guifont=Monospace\ 16
+set guifont=Cascadia\ Code\ :h12
 
 call quickmenu#reset()
 call quickmenu#append('# Start', '')
