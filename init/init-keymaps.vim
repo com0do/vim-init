@@ -565,7 +565,7 @@ endif
 "----------------------------------------------------------------------
 vnoremap <space>gp :!python<cr>
 " vmap <space>gs y/<c-r>"<cr>
-vmap <space>vs y/<C-R>=escape(@", '\\/.*$^~[]')<CR>
+vmap <space>vs y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 vmap <space>vr y:%s/<C-R>=escape(@", '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
 
 
@@ -578,12 +578,17 @@ augroup log_file
     autocmd!
     "autocmd BufWinEnter NGC_* silent exec 'lv /Event\ Triggered\ \:/gj % '| lop | normal <c-w>k
 augroup END
+autocmd FileType qf wincmd L
+autocmd BufEnter *.tsv lcd %:p:h
+autocmd FileType xml nnoremap <buffer> <Leader>f :%!xmllint --format -<CR>
+autocmd FileType json nnoremap <buffer> <Leader>f :%!jq .<CR>
 
 noremap Q :qa<CR>
-noremap <space>cp :set nonumber norelativenumber<CR>
+noremap <space>cp :set nonumber norelativenumber <bar> SignifyDisable<CR>
 noremap <silent>cc :ApcEnable <cr>
 nnoremap <leader>lv :lv /Event\ Triggered\ \:/gj % <cr> :lop<cr> \| <c-w>k
 noremap <leader>v :set expandtab <bar> :retab<cr>
+nnoremap <space>mtl :exe "e " . trim(system("ls -t $HOME/hss/ims_mt/logs/TC_IMS* \| head -1 \| xargs realpath"))<CR>
 noremap <leader>p <ESC>"0p
 
 command LV :exec 'lv /' . expand("<cword>") . '/gj ' . expand('%') | lop

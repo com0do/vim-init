@@ -526,6 +526,7 @@ if index(g:bundle_group, 'leaderf') >= 0
 		let g:Lf_WindowHeight = 0.30
 		let g:Lf_CacheDirectory = expand('~/.vim/cache')
 
+        let g:Lf_useGopls = 1
         let g:Lf_RecurseSubmodules = 1
         "let g:Lf_DefaultMode = "Regex"
         "let g:Lf_UseVersionControlTool = 0
@@ -535,7 +536,7 @@ if index(g:bundle_group, 'leaderf') >= 0
         "let g:Lf_PreviewInPopup = 1
 
 		" 显示绝对路径
-		let g:Lf_ShowRelativePath = 0
+		let g:Lf_ShowRelativePath = 1
 
 		" 隐藏帮助
 		let g:Lf_HideHelp = 1
@@ -652,10 +653,11 @@ if index(g:bundle_group, 'go') >= 0
     let g:go_gopls_enabled = 1
     let g:go_diagnostics_enabled = 1
     let g:go_def_mapping_enabled = 1
-    let g:go_code_completion_enabled = 0
+    let g:go_code_completion_enabled = 1
     let g:go_doc_keywordprg_enabled = 0
     let g:go_fmt_autosave = 0
-    let g:go_imports_autosave = 0
+    let g:go_imports_autosave = 1
+    let g:go_version_warning = 1
 
     let g:go_debug_windows = {
                 \ 'vars':       'leftabove 40vnew',
@@ -675,10 +677,29 @@ if index(g:bundle_group, 'clang-format') >= 0
     Plug 'rhysd/vim-clang-format'
 
     "autocmd FileType c ClangFormatAutoEnable
-    let g:clang_format#command = 'clang-format-9'
+    "let g:clang_format#command = 'clang-format'
     let g:clang_format#detect_style_file = 1
     "nmap <leader>cf :ClangFormat<cr>
+endif
 
+if index(g:bundle_group, 'markdown') >= 0
+    "Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
+    Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown'}
+
+    let g:table_mode_corner='|'
+    function! s:isAtStartOfLine(mapping)
+        let text_before_cursor = getline('.')[0 : col('.')-1]
+        let mapping_pattern = '\V' . escape(a:mapping, '\')
+        let comment_pattern = '\V' . escape(substitute(&l:commentstring, '%s.*$', '', ''), '\')
+        return (text_before_cursor =~? '^' . ('\v(' . comment_pattern . '\v)?') . '\s*\v' . mapping_pattern . '\v$')
+    endfunction
+
+    inoreabbrev <expr> <bar><bar>
+                \ <SID>isAtStartOfLine('\|\|') ?
+                \ '<c-o>:TableModeEnable<cr><bar><space><bar><left><left>' : '<bar><bar>'
+    inoreabbrev <expr> __
+                \ <SID>isAtStartOfLine('__') ?
+                \ '<c-o>:silent! TableModeDisable<cr>' : '__'
 endif
 
 if index(g:bundle_group, 'coc') >= 0
@@ -763,7 +784,7 @@ if index(g:bundle_group, 'coc') >= 0
         " Setup formatexpr specified filetype(s).
         autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
         " Update signature help on jump placeholder.
-        autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+        "autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
     augroup end
 
     " Applying codeAction to the selected region.
