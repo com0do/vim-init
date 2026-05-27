@@ -26,6 +26,10 @@ exec 'set rtp+='.s:home
 " 将 ~/.vim 目录加入 runtimepath (有时候 vim 不会自动帮你加入）
 set rtp+=~/.vim
 
+" coc.nvim 配置文件路径重定向到 vim-init/，统一 git 管理
+" CoC 默认读 ~/.vim/coc-settings.json，这里指向 vim-init/coc-settings.json
+let g:coc_config_home = s:home
+
 
 "----------------------------------------------------------------------
 " 模块加载
@@ -48,6 +52,9 @@ LoadScript init/init-style.vim
 
 " 自定义按键
 LoadScript init/init-keymaps.vim
+
+" Typst 文件类型专属配置（tinymist LSP + 表格 + 快捷键）
+LoadScript init/init-typst.vim
 
 " 工具函数
 LoadScript init/tools.vim

@@ -554,7 +554,7 @@ if (!has('nvim')) && (has('win32') || has('win64'))
 	noremap <space>hr :FileSwitch tabe ~/_vimrc<cr>
 elseif !has('nvim')
 	noremap <space>hr :FileSwitch tabe ~/.vimrc<cr>
-	noremap <space>hk :FileSwitch tabe ~/.vim/vim-init/init/init-plugins.vim<cr>
+	noremap <space>hk :FileSwitch tabe ~/.vim/vim-init/init/init-keymaps.vim<cr>
 else
 	noremap <space>hr :FileSwitch tabe ~/.config/nvim/init.vim<cr>
 endif
@@ -565,15 +565,33 @@ endif
 "----------------------------------------------------------------------
 vnoremap <space>gp :!python<cr>
 " vmap <space>gs y/<c-r>"<cr>
-vmap <space>vs y/<C-R>=escape(@", '\\/.*$^~[]')<CR>
+vmap <space>vs y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 vmap <space>vr y:%s/<C-R>=escape(@", '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
 
 
 autocmd BufWritePre *.c,*.cc,*.cpp,*.h,*.hpp  :%s/\s\+$//e
+augroup mk_file
+    autocmd!
+    autocmd BufReadPost *.c,*.cc,*.cpp,*.cxx,*.h,*.hpp,.bash_aliases :set expandtab
+augroup END
+augroup log_file
+    autocmd!
+    "autocmd BufWinEnter NGC_* silent exec 'lv /Event\ Triggered\ \:/gj % '| lop | normal <c-w>k
+augroup END
+autocmd FileType qf wincmd L
+autocmd BufEnter *.tsv lcd %:p:h
+autocmd FileType xml nnoremap <buffer> <Leader>f :%!xmllint --format -<CR>
+autocmd FileType json nnoremap <buffer> <Leader>f :%!jq .<CR>
+
 noremap Q :qa<CR>
-noremap <space>cp :set nonumber norelativenumber<CR>
+noremap <space>cp :set nonumber norelativenumber nolist <bar> SignifyDisable<CR>
+noremap <leader>cp :set norelativenumber nolist <bar> SignifyDisable <bar> colorscheme github<CR>
 noremap <silent>cc :ApcEnable <cr>
 nnoremap <leader>lv :lv /Event\ Triggered\ \:/gj % <cr> :lop<cr> \| <c-w>k
-command LV :exec 'lv /' . expand("<cword>") . '/gj ' . expand('%') | lop
 noremap <leader>v :set expandtab <bar> :retab<cr>
+nnoremap <space>mtl :exe "e " . trim(system("ls -t $HOME/hss/ims_mt/logs/TC_IMS* \| head -1 \| xargs realpath"))<CR>
 noremap <leader>p <ESC>"0p
+
+command LV :exec 'lv /' . expand("<cword>") . '/gj ' . expand('%') | lop
+command! Difft NERDTreeCLose | windo diffthis
+command! Diffo windo diffoff

@@ -18,7 +18,7 @@ if !exists('g:bundle_group')
 	let g:bundle_group += ['airline', 'nerdtree']
 	let g:bundle_group += ['leaderf','opt', 'clang-format']
 	"let g:bundle_group += ['gdb']
-	let g:bundle_group += ['go']
+	"let g:bundle_group += ['go']
     if index(g:completion_type, 'coc') >= 0
         let g:bundle_group += ['coc']
     else
@@ -103,6 +103,7 @@ if index(g:bundle_group, 'basic') >= 0
 
 	" 一次性安装一大堆 colorscheme
 	Plug 'flazz/vim-colorschemes'
+	"Plug 'catppuccin/vim', {'as': 'catppuccin'}
 
 	" 支持库，给其他插件用的函数库
 	Plug 'xolox/vim-misc'
@@ -178,7 +179,7 @@ if index(g:bundle_group, 'enhanced') >= 0
 	let g:vim_dict_config = {'html':'html,javascript,css', 'markdown':'text'}
 
 	Plug 'skywind3000/vim-auto-popmenu'
-	let g:apc_enable_ft = {'text':1, 'markdown':1}
+	let g:apc_enable_ft = {'text':1, 'markdown':1, 'typst':1}
 	"let g:apc_enable_ft = '*'
 	set cpt=.,k,w,b
 
@@ -199,6 +200,9 @@ if index(g:bundle_group, 'enhanced') >= 0
 
 	" 环绕字符编辑
 	Plug 'tpope/vim-surround'
+
+	" UNIX 命令语法糖
+	Plug 'tpope/vim-eunuch'
 
 	" ALT_+/- 用于按分隔符扩大缩小 v 选区
 	map <m-=> <Plug>(expand_region_expand)
@@ -238,6 +242,7 @@ if index(g:bundle_group, 'tags') >= 0
 
 	" 默认生成的数据文件集中到 ~/.cache/tags 避免污染项目目录，好清理
 	let g:gutentags_cache_dir = expand('~/.cache/tags')
+    let g:gutentags_generate_on_write = 0
 
 	" 默认禁用自动生成
 	let g:gutentags_modules = []
@@ -260,7 +265,7 @@ if index(g:bundle_group, 'tags') >= 0
 
     let g:ctags_version = system('ctags --version')[0:8]
     if g:ctags_version == "Universal"
-        "let g:gutentags_ctags_extra_args += ['--extras=+q','--output-format=e-ctags']
+        let g:gutentags_ctags_extra_args += ['--extras=+q','--output-format=e-ctags']
     endif
 
 	" 使用 universal-ctags 的话需要下面这行，请反注释
@@ -331,6 +336,9 @@ if index(g:bundle_group, 'filetypes') >= 0
 
 	" vim org-mode
 	Plug 'jceb/vim-orgmode', { 'for': 'org' }
+
+	" Typst 语法高亮（LSP 由 coc-settings.json 里的 tinymist 提供）
+	Plug 'kaarmu/typst.vim', { 'for': 'typst' }
 
     let g:cpp_class_scope_highlight = 1
     let g:cpp_member_variable_highlight = 1
@@ -491,7 +499,7 @@ if index(g:bundle_group, 'leaderf') >= 0
 		let g:Lf_ShortcutB = '<m-n>'
 
 		" CTRL+n 打开最近使用的文件 MRU，进行模糊匹配
-		noremap <c-n> :LeaderfMru<cr>
+		"noremap <c-n> :LeaderfMru<cr>
 
 		" ALT+p 打开函数列表，按 i 进入模糊匹配，ESC 退出
 		noremap <m-p> :LeaderfFunction<cr>
@@ -522,6 +530,7 @@ if index(g:bundle_group, 'leaderf') >= 0
 		let g:Lf_WindowHeight = 0.30
 		let g:Lf_CacheDirectory = expand('~/.vim/cache')
 
+        let g:Lf_useGopls = 1
         let g:Lf_RecurseSubmodules = 1
         "let g:Lf_DefaultMode = "Regex"
         "let g:Lf_UseVersionControlTool = 0
@@ -531,7 +540,7 @@ if index(g:bundle_group, 'leaderf') >= 0
         "let g:Lf_PreviewInPopup = 1
 
 		" 显示绝对路径
-		let g:Lf_ShowRelativePath = 0
+		let g:Lf_ShowRelativePath = 1
 
 		" 隐藏帮助
 		let g:Lf_HideHelp = 1
@@ -556,7 +565,7 @@ if index(g:bundle_group, 'leaderf') >= 0
             \ 'Function': 0,
             \ 'Line': 1,
             \ 'Colorscheme': 1,
-            \ 'Rg': 1,
+            \ 'Rg': 0,
             \ 'Gtags': 0
             \}
 
@@ -629,7 +638,8 @@ if index(g:bundle_group, 'opt') >= 0
 		" Replace the text with translation
 		nmap <silent> <Leader>tr <Plug>TranslateR
 		vmap <silent> <Leader>tr <Plug>TranslateRV
-		let g:translator_window_enable_icon = v:true
+		"let g:translator_window_enable_icon = v:true
+		"let g:translator_proxy_url = 'http://10.158.100.1:8080'
 	endif
 endif
 
@@ -644,13 +654,14 @@ endif
 if index(g:bundle_group, 'go') >= 0
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
-    let g:go_gopls_enabled = 0
-    let g:go_diagnostics_enabled = 0
-    let g:go_def_mapping_enabled = 0
-    let g:go_code_completion_enabled = 0
+    let g:go_gopls_enabled = 1
+    let g:go_diagnostics_enabled = 1
+    let g:go_def_mapping_enabled = 1
+    let g:go_code_completion_enabled = 1
     let g:go_doc_keywordprg_enabled = 0
     let g:go_fmt_autosave = 0
-    let g:go_imports_autosave = 0
+    let g:go_imports_autosave = 1
+    let g:go_version_warning = 1
 
     let g:go_debug_windows = {
                 \ 'vars':       'leftabove 40vnew',
@@ -670,10 +681,29 @@ if index(g:bundle_group, 'clang-format') >= 0
     Plug 'rhysd/vim-clang-format'
 
     "autocmd FileType c ClangFormatAutoEnable
-    let g:clang_format#command = 'clang-format-9'
+    "let g:clang_format#command = 'clang-format'
     let g:clang_format#detect_style_file = 1
     "nmap <leader>cf :ClangFormat<cr>
+endif
 
+if index(g:bundle_group, 'markdown') >= 0
+    "Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
+    Plug 'dhruvasagar/vim-table-mode', { 'for': ['markdown', 'typst'] }
+
+    let g:table_mode_corner='|'
+    function! s:isAtStartOfLine(mapping)
+        let text_before_cursor = getline('.')[0 : col('.')-1]
+        let mapping_pattern = '\V' . escape(a:mapping, '\')
+        let comment_pattern = '\V' . escape(substitute(&l:commentstring, '%s.*$', '', ''), '\')
+        return (text_before_cursor =~? '^' . ('\v(' . comment_pattern . '\v)?') . '\s*\v' . mapping_pattern . '\v$')
+    endfunction
+
+    inoreabbrev <expr> <bar><bar>
+                \ <SID>isAtStartOfLine('\|\|') ?
+                \ '<c-o>:TableModeEnable<cr><bar><space><bar><left><left>' : '<bar><bar>'
+    inoreabbrev <expr> __
+                \ <SID>isAtStartOfLine('__') ?
+                \ '<c-o>:silent! TableModeDisable<cr>' : '__'
 endif
 
 if index(g:bundle_group, 'coc') >= 0
@@ -727,6 +757,7 @@ if index(g:bundle_group, 'coc') >= 0
 
     " GoTo code navigation.
     nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gD :call CocAction('jumpDefinition', 'vsplit')<CR>
     nmap <silent> gy <Plug>(coc-type-definition)
     nmap <silent> gi <Plug>(coc-implementation)
     nmap <silent> gr <Plug>(coc-references)
@@ -757,7 +788,7 @@ if index(g:bundle_group, 'coc') >= 0
         " Setup formatexpr specified filetype(s).
         autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
         " Update signature help on jump placeholder.
-        autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+        "autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
     augroup end
 
     " Applying codeAction to the selected region.
@@ -833,6 +864,11 @@ if index(g:bundle_group, 'coc') >= 0
 
     nnoremap <silent><nowait> <space>e  :<C-u>CocCommand explorer<cr>
     nnoremap <silent><nowait> <leader>h  :<C-u>CocCommand clangd.switchSourceHeader<cr>
+
+    noremap <c-n> :<C-u>CocList mru<cr>
+    "autocmd FileType go nnoremap <buffer> <m-p> :CocList outline<CR>
+    "autocmd FileType go nnoremap <buffer> <m-P> :CocList symbols<CR>
+
 endif
 
 if index(g:bundle_group, 'YouCompleteMe') >= 0

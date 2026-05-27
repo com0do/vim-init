@@ -30,7 +30,7 @@ set cindent
 set winaltkeys=no
 
 " 关闭自动换行
-set nowrap
+set wrap
 
 " 打开功能键超时检测（终端下功能键为一串 ESC 开头的字符串）
 set ttimeout
@@ -45,7 +45,7 @@ set ruler
 set relativenumber
 set autoread
 set cursorline
-"set expandtab
+set scrolloff=5
 
 " coc 使用的配置
 set hidden

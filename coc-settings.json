@@ -1,0 +1,34 @@
+{
+    "signature.triggerSignatureWait": 1000,
+    "pyright.inlayHints.variableTypes": false,
+    "pyright.inlayHints.parameterTypes": true,
+    "colors.enable": true,
+    "clangd.arguments": [
+        "--header-insertion=never"
+    ],
+    "go.checkForUpdates": "disabled",
+    "perl.enable": true,
+
+    "languageserver": {
+        "tinymist": {
+            "command": "tinymist",
+            "args": [],
+            "filetypes": ["typst"],
+            "rootPatterns": ["main.typ", ".git", "typst.toml"],
+            "settings": {
+                "tinymist": {
+                    "exportPdf": "onSave",
+                    "formatterMode": "typstyle",
+                    "formatterPrintWidth": 100,
+                    "previewFeature": "enable",
+                    "completion": {
+                        "triggerOnSnippetPlaceholders": true,
+                        "postfix": true
+                    },
+                    "semanticTokens": "enable",
+                    "compileStatus": "enable"
+                }
+            }
+        }
+    }
+}
