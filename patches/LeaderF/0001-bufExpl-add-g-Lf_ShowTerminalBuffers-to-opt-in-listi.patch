@@ -1,0 +1,40 @@
+From 7ab2ce1f46e44a4099e14b8feca3b921618c554f Mon Sep 17 00:00:00 2001
+From: com0do <24559099+com0do@users.noreply.github.com>
+Date: Tue, 28 Jul 2026 14:57:31 +0800
+Subject: [PATCH] bufExpl: add g:Lf_ShowTerminalBuffers to opt-in listing
+ terminal buffers
+
+Since upstream commit b5f1990 ("do not list the terminal buffer"),
+LeaderfBuffer unconditionally filters out `buftype == 'terminal'`
+buffers on Vim (Neovim is unaffected). This makes it impossible to
+jump back to a running :terminal window via <M-n> / :LeaderfBuffer.
+
+Introduce a global switch `g:Lf_ShowTerminalBuffers` (default 0,
+i.e. keep upstream behavior). Set `let g:Lf_ShowTerminalBuffers = 1`
+in vimrc to include terminal buffers in the buffer explorer.
+
+This is a local patch maintained under ~/.vim/vim-init/patches/,
+intended to be reapplied via `git am` after upstream updates.
+---
+ autoload/leaderf/python/leaderf/bufExpl.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/autoload/leaderf/python/leaderf/bufExpl.py b/autoload/leaderf/python/leaderf/bufExpl.py
+index 4dc8d19..1b1f43f 100644
+--- a/autoload/leaderf/python/leaderf/bufExpl.py
++++ b/autoload/leaderf/python/leaderf/bufExpl.py
+@@ -52,7 +52,8 @@ class BufferExplorer(Explorer):
+                 buffers = {w.buffer.number: w.buffer for w in vim.current.tabpage.windows
+                            if os.path.basename(w.buffer.name) != "LeaderF"}
+ 
+-        if lfEval("has('nvim')") == '0':
++        if lfEval("has('nvim')") == '0' \
++                and lfEval("get(g:, 'Lf_ShowTerminalBuffers', 0)") == '0':
+             buffers = {number : buffer for number, buffer in buffers.items()
+                        if buffer.options["buftype"] != b"terminal"}
+ 
+
+base-commit: 8a50a04f2dea066d58986371a0f65d1588cc67f6
+-- 
+2.43.7
+
