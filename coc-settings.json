@@ -1,13 +1,24 @@
 {
     "signature.triggerSignatureWait": 1000,
-    "pyright.inlayHints.variableTypes": false,
-    "pyright.inlayHints.parameterTypes": true,
     "colors.enable": true,
     "clangd.arguments": [
         "--header-insertion=never"
     ],
     "go.checkForUpdates": "disabled",
     "perl.enable": true,
+
+    "pyright.inlayHints.variableTypes": false,
+    "pyright.inlayHints.parameterTypes": true,
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.useLibraryCodeForTypes": true,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.exclude": [
+        "**/build",
+        "**/dist",
+        "**/.tox"
+    ],
 
     "languageserver": {
         "tinymist": {

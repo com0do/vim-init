@@ -263,6 +263,21 @@ if index(g:bundle_group, 'tags') >= 0
 	let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 	let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
+	"let g:gutentags_ctags_extra_args += ['--languages=-Python,JavaScript,TypeScript,JSON,HTML,CSS']
+	let g:gutentags_ctags_exclude_wildignore = 1
+	let g:gutentags_ctags_exclude = [
+		\ '.git', '.svn', '.hg',
+		\ '.venv', 'venv', 'env',
+		\ '__pycache__', '*.pyc', '*.pyo',
+		\ 'node_modules', 'bower_components',
+		\ '.tox', '.nox', '.mypy_cache', '.pytest_cache', '.ruff_cache',
+		\ 'site-packages', '*.egg-info',
+		\ 'dist', 'build', 'target', 'cmake-build-*',
+		\ 'third_party', 'vendor', 'submodules', 'external',
+		\ '.cache', '.idea', '.vscode',
+		\ '*.lock', '*-lock.json',
+		\ ]
+
     let g:ctags_version = system('ctags --version')[0:8]
     if g:ctags_version == "Universal"
         let g:gutentags_ctags_extra_args += ['--extras=+q','--output-format=e-ctags']
@@ -532,6 +547,9 @@ if index(g:bundle_group, 'leaderf') >= 0
 
         let g:Lf_useGopls = 1
         let g:Lf_RecurseSubmodules = 1
+
+        " 依赖 ~/.vim/vim-init/patches/LeaderF/0001-*.patch
+        let g:Lf_ShowTerminalBuffers = 1
         "let g:Lf_DefaultMode = "Regex"
         "let g:Lf_UseVersionControlTool = 0
         "let g:Lf_DefaultExternalTool = "rg"

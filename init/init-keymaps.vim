@@ -584,7 +584,7 @@ autocmd FileType xml nnoremap <buffer> <Leader>f :%!xmllint --format -<CR>
 autocmd FileType json nnoremap <buffer> <Leader>f :%!jq .<CR>
 
 noremap Q :qa<CR>
-noremap <space>cp :set nonumber norelativenumber nolist <bar> SignifyDisable<CR>
+noremap <space>cp :set relativenumber! number! list! <bar> SignifyToggle<CR>
 noremap <leader>cp :set norelativenumber nolist <bar> SignifyDisable <bar> colorscheme github<CR>
 noremap <silent>cc :ApcEnable <cr>
 nnoremap <leader>lv :lv /Event\ Triggered\ \:/gj % <cr> :lop<cr> \| <c-w>k
